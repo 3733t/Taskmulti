@@ -19,7 +19,7 @@ $serverName = "tcp:task-db.database.windows.net,1433";
 $connectionOptions = array(
     "Database" => "tms_db",
     "Uid" => "task",
-    "PWD" => "sunspot7301",
+    "PWD" => "sunspot7301#",
     "LoginTimeout" => 30
 );
 
