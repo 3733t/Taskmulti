@@ -3,21 +3,22 @@
 <?php 
 session_start();
 include('./db_connect.php');
-  ob_start();
-  // if(!isset($_SESSION['system'])){
+ob_start();
 
-    $system = $conn->query("SELECT * FROM system_settings")->fetch_array();
-    foreach($system as $k => $v){
-      $_SESSION['system'][$k] = $v;
-    }
-  // }
-  ob_end_flush();
+if(!isset($_SESSION['system'])) {
+  $stmt = $conn->query("SELECT * FROM system_settings");
+  $system = $stmt->fetch(PDO::FETCH_ASSOC);
+  $_SESSION['system'] = $system;
+}
+ob_end_flush();
 ?>
+
 <?php 
 if(isset($_SESSION['login_id']))
 header("location:index.php?page=home");
 
 ?>
+
 <?php include 'header.php' ?>
 <body class="hold-transition login-page bg-info">
 <div class="login-box">
@@ -69,32 +70,32 @@ header("location:index.php?page=home");
 <script>
   $(document).ready(function(){
     $('#login-form').submit(function(e){
-    e.preventDefault()
-    start_load()
-    if($(this).find('.alert-danger').length > 0 )
-      $(this).find('.alert-danger').remove();
-    $.ajax({
-      url:'ajax.php?action=login',
-      method:'POST',
-      data:$(this).serialize(),
-      error:err=>{
-        console.log(err)
-        end_load();
-
-      },
-      success:function(resp){
-        if(resp == 1){
-          location.href ='index.php?page=home';
-        }else{
-          $('#login-form').prepend('<div class="alert alert-danger">Username or password is incorrect.</div>')
+      e.preventDefault()
+      start_load()
+      if($(this).find('.alert-danger').length > 0 )
+        $(this).find('.alert-danger').remove();
+      $.ajax({
+        url: 'ajax.php?action=login',
+        method: 'POST',
+        data: $(this).serialize(),
+        error: err => {
+          console.log(err)
           end_load();
+        },
+        success: function(resp){
+          if(resp == 1){
+            location.href ='index.php?page=home';
+          }else{
+            $('#login-form').prepend('<div class="alert alert-danger">Username or password is incorrect.</div>')
+            end_load();
+          }
         }
-      }
+      })
     })
-  })
   })
 </script>
 <?php include 'footer.php' ?>
 
 </body>
 </html>
+
